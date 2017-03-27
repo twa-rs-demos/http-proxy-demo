@@ -1,6 +1,6 @@
 {
   "name": "http-proxy-demo",
-  "description": "http proxy middleware for express",
+  "description": "调研如何使用 express-http-proxy ",
   "scripts": {
     "test": "npm -s run mocha",
     "mocha": "mocha -R spec spec/*.js"
@@ -9,9 +9,7 @@
     "body-parser": "^1.15.2",
     "express": "^4.3.1",
     "mocha": "^2.1.0",
-    "supertest": "^3.0.0"
-  },
-  "dependencies": {
+    "supertest": "^3.0.0",
     "express-http-proxy": "^0.11.0"
   }
 }
