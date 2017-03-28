@@ -4,12 +4,14 @@
 const app = require('express')();
 const bodyParser = require('body-parser');
 const proxy = require('express-http-proxy');
-const proxy_target_port = require('./constants').proxy_target_port;
+const constants = require('./constants');
 
 
 app.use(bodyParser.json());
-app.use( proxy('http://localhost', {
-  port: proxy_target_port,
+
+
+app.use(proxy('http://localhost', {
+  port: constants.proxy_target_port,
   filter: (req) => {
     console.log('path: ' + require('url').parse(req.url).path);
     if (req.body.userId === 2) {   /* userId 与 workspaceId 是否配对*/
@@ -20,12 +22,15 @@ app.use( proxy('http://localhost', {
   forwardPath: (req, res) => {
     return require('url').parse(req.url).path + '/che';
   }
+}));
 
-  // decorateRequest: function(req) {
-  //   req.method = 'GET';
-  //   req.body=null;
-  //   return req;
-  // }
+
+// add proxy for paper-api
+app.use('/paper-api', proxy('http://localhost', {
+  port: constants.paper_api_port,
+  forwardPath: (req, res) => {
+    return require('url').parse(req.url).path + 'paper-api/inspector';
+  }
 }));
 
 
