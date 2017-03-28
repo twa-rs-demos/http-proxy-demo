@@ -43,7 +43,7 @@ describe('proxy', function () {
       }
     }));
 
-    other = proxyTarget(port, 1000);
+    other = proxyTarget(port);
 
   });
 
