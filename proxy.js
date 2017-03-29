@@ -16,7 +16,6 @@ const options = {
 
 
 const cheProxy = proxy(options);
-app.use('che/', cheProxy)
 app.use(cheProxy);
 const port = 9999;
 
