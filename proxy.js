@@ -3,38 +3,24 @@
  */
 const app = require('express')();
 const bodyParser = require('body-parser');
-const proxy = require('express-http-proxy');
+const proxy = require('http-proxy-middleware');
 const constants = require('./constants');
 
 
 app.use(bodyParser.json());
 
-
-app.use(proxy('http://localhost', {
-  port: constants.proxy_target_port,
-  filter: (req) => {
-    console.log('path: ' + require('url').parse(req.url).path);
-    if (req.body.userId === 2) {   /* userId 与 workspaceId 是否配对*/
-      console.log('userId: ' + req.body.userId)
-      return true;
-    }
-  },
-  forwardPath: (req, res) => {
-    return require('url').parse(req.url).path + '/che';
-  }
-}));
+const options = {
+  target: 'http://localhost:8080', // target host
+  ws: true                         // proxy websockets
+};
 
 
-// add proxy for paper-api
-app.use('/paper-api', proxy('http://localhost', {
-  port: constants.paper_api_port,
-  forwardPath: (req, res) => {
-    return require('url').parse(req.url).path + 'paper-api/inspector';
-  }
-}));
-
-
+const cheProxy = proxy(options);
+app.use('che/', cheProxy)
+app.use(cheProxy);
 const port = 9999;
+
+
 app.listen(port, () => {
   console.log(`proxy listen in ${port}`)
 })
